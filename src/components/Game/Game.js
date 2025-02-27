@@ -1,17 +1,21 @@
 import React from "react";
 import Guesses from "../Guesses";
 import Input from "../Input";
+import GameOverBanner from "../GameOverBanner";
 
 import { sample } from "../../utils";
 import { WORDS } from "../../data";
 import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 
-// Pick a random word on every pageload.
-const answer = sample(WORDS);
-// To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
+function getNewAnswer() {
+  const answer = sample(WORDS);
+  // To make debugging easier, we'll log the solution in the console.
+  console.info({ answer });
+  return answer;
+}
 
 function Game() {
+  const [answer, setAnswer] = React.useState(getNewAnswer);
   const [guesses, setGuesses] = React.useState([]);
   const lastGuess = guesses.at(-1);
   const hasWon = lastGuess === answer;
@@ -22,23 +26,28 @@ function Game() {
     setGuesses([...guesses, guess]);
   }
 
+  function reset() {
+    setAnswer(getNewAnswer());
+    setGuesses([]);
+  }
+
   return (
     <>
       <Guesses guesses={guesses} answer={answer} />
       {hasWon && (
-        <div className="happy banner">
+        <GameOverBanner className="happy" onClick={reset}>
           <p>
             <strong>Congratulations!</strong> Got it in{" "}
             <strong>3 guesses</strong>.
           </p>
-        </div>
+        </GameOverBanner>
       )}
       {hasLost && (
-        <div className="sad banner">
+        <GameOverBanner className="sad" onClick={reset}>
           <p>
             Sorry, the correct answer is <strong>{answer}</strong>.
           </p>
-        </div>
+        </GameOverBanner>
       )}
       <Input
         onSubmit={appendGuess}
