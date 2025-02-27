@@ -1,16 +1,11 @@
 import React from "react";
 
-function TextInput({ onSubmit, disabled }) {
-  const [value, setValue] = React.useState("");
-
+function TextInput({ disabled, value, setValue, onSubmit }) {
   const finalPattern = "^[A-Z]{5}$";
-  const regex = /^[A-Z]{0,5}$/;
 
   function onFormSubmit(event) {
     event.preventDefault();
-    console.info("Guess submitted: ", value);
     onSubmit(value);
-    setValue("");
   }
   return (
     <form className="guess-input-wrapper" onSubmit={onFormSubmit}>
@@ -21,10 +16,7 @@ function TextInput({ onSubmit, disabled }) {
         disabled={disabled}
         value={disabled ? "" : value}
         onChange={(event) => {
-          const newValue = event.target.value.toLocaleUpperCase("en-US");
-          if (regex.test(newValue)) {
-            setValue(newValue);
-          }
+          setValue(event.target.value);
         }}
         pattern={finalPattern}
       />

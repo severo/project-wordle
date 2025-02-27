@@ -1,6 +1,6 @@
 import React from "react";
 import Guesses from "../Guesses";
-import TextInput from "../TextInput";
+import Input from "../Input";
 
 import { sample } from "../../utils";
 import { WORDS } from "../../data";
@@ -40,7 +40,12 @@ function Game() {
           </p>
         </div>
       )}
-      <TextInput onSubmit={appendGuess} disabled={hasFinished} />
+      <Input
+        onSubmit={appendGuess}
+        disabled={hasFinished}
+        answer={answer}
+        guesses={guesses}
+      />
     </>
   );
 }
