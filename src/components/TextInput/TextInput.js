@@ -1,6 +1,6 @@
 import React from "react";
 
-function TextInput({ onSubmit }) {
+function TextInput({ onSubmit, disabled }) {
   const [value, setValue] = React.useState("");
 
   const finalPattern = "^[A-Z]{5}$";
@@ -18,7 +18,8 @@ function TextInput({ onSubmit }) {
       <input
         id="guess-input"
         type="text"
-        value={value}
+        disabled={disabled}
+        value={disabled ? "" : value}
         onChange={(event) => {
           const newValue = event.target.value.toLocaleUpperCase("en-US");
           if (regex.test(newValue)) {

@@ -4,6 +4,7 @@ import TextInput from "../TextInput";
 
 import { sample } from "../../utils";
 import { WORDS } from "../../data";
+import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -12,6 +13,10 @@ console.info({ answer });
 
 function Game() {
   const [guesses, setGuesses] = React.useState([]);
+  const lastGuess = guesses.at(-1);
+  const hasWon = lastGuess === answer;
+  const hasLost = guesses.length === NUM_OF_GUESSES_ALLOWED && !hasWon;
+  const hasFinished = hasWon || hasLost;
 
   function appendGuess(guess) {
     setGuesses([...guesses, guess]);
@@ -20,7 +25,22 @@ function Game() {
   return (
     <>
       <Guesses guesses={guesses} answer={answer} />
-      <TextInput onSubmit={appendGuess} />
+      {hasWon && (
+        <div className="happy banner">
+          <p>
+            <strong>Congratulations!</strong> Got it in{" "}
+            <strong>3 guesses</strong>.
+          </p>
+        </div>
+      )}
+      {hasLost && (
+        <div className="sad banner">
+          <p>
+            Sorry, the correct answer is <strong>{answer}</strong>.
+          </p>
+        </div>
+      )}
+      <TextInput onSubmit={appendGuess} disabled={hasFinished} />
     </>
   );
 }
